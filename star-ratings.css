@@ -11,6 +11,10 @@ license that can be found in the LICENSE file.
   -moz-user-select: none;
 }
 
+#container {
+  outline: none;
+}
+
 #star {
   display: inline-block;
   vertical-align: middle;
