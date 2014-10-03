@@ -2,6 +2,7 @@
   "name": "star-ratings",
   "dependencies": {
     "polymer": "Polymer/polymer#>=0.4.0 <1.0.0",
-    "core-icons": "Polymer/core-icons#~0.4.1"
+    "core-icons": "Polymer/core-icons#~0.4.1",
+    "core-a11y-keys": "Polymer/core-a11y-keys#~0.4.2"
   }
 }

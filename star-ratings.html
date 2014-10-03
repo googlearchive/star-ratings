@@ -31,10 +31,12 @@ Fired when the count of selected stars changes.
 -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-a11y-keys/core-a11y-keys.html">
 
 <polymer-element name="star-ratings" attributes="count value autofocus">
   <template>
     <link rel="stylesheet" href="star-ratings.css">
+    <core-a11y-keys id="a11y" keys="* end home right up left down esc" target="{{$.container}}" on-keys-pressed="{{handleKeys}}"></core-a11y-keys>
     <span id="container" tabindex="0" on-keydown="{{keydownAction}}" role="slider" aria-valuemax="{{count}}" aria-valuemin="0" aria-valuenow="{{value}}">
       <template repeat="{{star in stars}}">
         <core-icon id="star" icon="{{ star < value? 'star' : 'star-outline' }}"  on-tap="{{updateValue}}"></core-icon>
@@ -99,24 +101,27 @@ Fired when the count of selected stars changes.
           this.value--;
         }
       },
-      keydownAction: function(event, detail, sender) {
-        var keyIdentifier = event.keyIdentifier || event.key;
+      handleKeys: function(event, detail, sender) {
+        var keyIdentifier = event.detail.key;
         switch (keyIdentifier) {
-        case "End":
+        case "end":
           this.value = this.count;
           event.preventDefault();
           return;
-        case "Home":
+        case "esc":
+          this.$.container.blur();
+          return;
+        case "home":
           this.value = 0;
           event.preventDefault();
           return;
-        case "Right":
-        case "Up":
+        case "right":
+        case "up":
           this.incrementValue();
           event.preventDefault();
           return;
-        case "Left":
-        case "Down":
+        case "left":
+        case "down":
           this.decrementValue();
           event.preventDefault();
           return;
