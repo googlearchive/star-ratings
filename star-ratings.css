@@ -18,18 +18,5 @@ license that can be found in the LICENSE file.
   height: 24px;
   margin: 0 5px;
   background-size: 100% 100%;
-  background-image: url('assets/ic_star_rate_darkalt.png');
   cursor: pointer;
-}
-
-#star.full {
-  background-image: url('assets/ic_star_rate_darkreg.png');
-}
-
-:host(.dark) #star {
-  background-image: url('assets/ic_star_rate_lightalt.png');
-}
-
-:host(.dark) #star.full {
-  background-image: url('assets/ic_star_rate_lightreg.png');
 }
