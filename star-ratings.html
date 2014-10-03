@@ -30,13 +30,14 @@ Fired when the count of selected stars changes.
 @event star-count-changed
 -->
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-icons/core-icons.html">
 
 <polymer-element name="star-ratings" attributes="count value autofocus">
   <template>
     <link rel="stylesheet" href="star-ratings.css">
     <span id="container" tabindex="0" on-keydown="{{keydownAction}}" role="slider" aria-valuemax="{{count}}" aria-valuemin="0" aria-valuenow="{{value}}">
       <template repeat="{{star in stars}}">
-        <span id="star" class="{{ {full: star < value} | tokenList }}" on-tap="{{updateValue}}"></span>
+        <core-icon id="star" icon="{{ star < value? 'star' : 'star-outline' }}"  on-tap="{{updateValue}}"></core-icon>
       </template>
     </span>
   </template>
@@ -45,7 +46,7 @@ Fired when the count of selected stars changes.
       /**
        * Whether to focus this element on document load.
        * 
-       * @property autofocus
+       * @attribute autofocus
        * @type boolean
        * @default false
        */
@@ -69,7 +70,7 @@ Fired when the count of selected stars changes.
       ready: function() {
         this.countChanged();
         if (this.autofocus) {
-          this.focus();
+          this.$.container.focus();
         }
       },
       countChanged: function() {
