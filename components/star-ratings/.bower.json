@@ -6,11 +6,11 @@
     "core-a11y-keys": "Polymer/core-a11y-keys#~0.4.2"
   },
   "homepage": "https://github.com/addyosmani/star-ratings",
-  "_release": "b7af4ac29e",
+  "_release": "4e7f60e603",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "b7af4ac29e0aaefaec69d857843b76e08d62bbfb"
+    "commit": "4e7f60e60311e57a4d2d772d6ebc6824335173b7"
   },
   "_source": "git://github.com/addyosmani/star-ratings.git",
   "_target": "master",
