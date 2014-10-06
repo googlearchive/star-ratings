@@ -1,0 +1,19 @@
+{
+  "name": "star-ratings",
+  "dependencies": {
+    "polymer": "Polymer/polymer#>=0.4.0 <1.0.0",
+    "core-icons": "Polymer/core-icons#~0.4.1",
+    "core-a11y-keys": "Polymer/core-a11y-keys#~0.4.2"
+  },
+  "homepage": "https://github.com/addyosmani/star-ratings",
+  "_release": "b7af4ac29e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "b7af4ac29e0aaefaec69d857843b76e08d62bbfb"
+  },
+  "_source": "git://github.com/addyosmani/star-ratings.git",
+  "_target": "master",
+  "_originalSource": "addyosmani/star-ratings",
+  "_direct": true
+}

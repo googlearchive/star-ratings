@@ -1,0 +1,153 @@
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+
+<!--
+/**
+ * star-ratings is an element allowing users to rate items. 
+ * It aims to be accessible by default and includes keyboard 
+ * supported powered by the [&lt;core-a11y-keys&gt;]() element.
+ *
+ * Example:
+ *
+ *     <star-ratings value="4"></star-ratings>
+ *
+ * By default star-ratings shows 5 stars but can be configured using 
+ * "count" attribute:
+ *
+ *     <star-ratings value="3" count="10"></star-ratings>
+ *
+ * Autofocusing the element is also supported using the "autofocus"
+ * attribute:
+ *
+ *     <star-ratings value="6" count="10" autofocus></star-ratings>
+ *     
+ * @element star-ratings
+ * @status alpha
+ * @homepage http://github.com/polymerlabs/star-ratings
+ */
+-->
+
+<!--
+Fired when the count of selected stars changes.
+
+@event star-count-changed
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-a11y-keys/core-a11y-keys.html">
+
+<polymer-element name="star-ratings" attributes="count value autofocus">
+  <template>
+    <link rel="stylesheet" href="star-ratings.css">
+    <core-a11y-keys id="a11y" keys="* end home right up left down esc" target="{{$.container}}" on-keys-pressed="{{handleKeys}}"></core-a11y-keys>
+    <span id="container" tabindex="0" on-keydown="{{keydownAction}}" role="slider" aria-valuemax="{{count}}" aria-valuemin="0" aria-valuenow="{{value}}">
+      <template repeat="{{star in stars}}">
+        <core-icon id="star" icon="{{ star < value? 'star' : 'star-outline' }}"  on-tap="{{updateValue}}"></core-icon>
+      </template>
+    </span>
+  </template>
+  <script>
+    Polymer('star-ratings', {
+      /**
+       * Whether to focus this element on document load.
+       * 
+       * @attribute autofocus
+       * @type boolean
+       * @default false
+       */
+      autofocus: false,
+      /**
+       * Number of stars to display.
+       *
+       * @attribute count
+       * @type number
+       * @default 5
+       */
+      count: 5,
+      /**
+       * Number of selected stars.
+       *
+       * @attribute value
+       * @type number
+       * @default 0
+       */
+      value: 0,
+      ready: function() {
+        this.countChanged();
+        if (this.autofocus) {
+          this.$.container.focus();
+        }
+      },
+      countChanged: function() {
+        this.stars = [];
+        for (var i = 0; i < this.count; i++) {
+          this.stars.push(i);
+        }
+      },
+      valueChanged: function() {
+        this.$.container.setAttribute(
+            'aria-valuetext',
+             this.value + (this.value == 1 ? ' star' : ' stars'));
+        this.fire('star-count-changed', { value: this.value });
+      },
+      updateValue: function(event, detail, sender) {
+        var s = sender.templateInstance.model.star;
+        this.value = s + Number(s >= this.value);
+      },
+      incrementValue: function() {
+        if (this.value < this.count) {
+          this.value++;
+        }
+      },
+      decrementValue: function() {
+        if (this.value > 0) {
+          this.value--;
+        }
+      },
+      handleKeys: function(event, detail, sender) {
+        var keyIdentifier = event.detail.key;
+        switch (keyIdentifier) {
+        case "end":
+          this.value = this.count;
+          event.preventDefault();
+          return;
+        case "esc":
+          this.$.container.blur();
+          return;
+        case "home":
+          this.value = 0;
+          event.preventDefault();
+          return;
+        case "right":
+        case "up":
+          this.incrementValue();
+          event.preventDefault();
+          return;
+        case "left":
+        case "down":
+          this.decrementValue();
+          event.preventDefault();
+          return;
+        }
+        if (this.count < 10) {
+          var keyValue = Number.parseInt(keyIdentifier, 10);
+          if (isNaN(keyValue) && keyIdentifier.match(/^U\+/)) {
+            var code = Number.parseInt(keyIdentifier.replace(/^U\+/, ''), 16);
+            keyValue = String.fromCharCode(code);
+          }
+          if (keyValue <= this.count) {
+            this.value = keyValue;
+            event.preventDefault();
+            return;
+          }
+        }
+      }
+    });
+  </script>
+</polymer-element>
