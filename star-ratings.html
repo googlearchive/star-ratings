@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /**
  * star-ratings is an element allowing users to rate items. 
  * It aims to be accessible by default and includes keyboard 
- * supported powered by the [&lt;core-a11y-keys&gt;](https://github.com/Polymer/core-a11y-keys) element.
+ * supported powered by the [&lt;iron-a11y-keys&gt;](https://github.com/PolymerElements/iron-a11y-keys) element.
  *
  * Example:
  *
@@ -39,55 +39,91 @@ Fired when the count of selected stars changes.
 @event star-count-changed
 -->
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-icons/core-icons.html">
-<link rel="import" href="../core-a11y-keys/core-a11y-keys.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
 
-<polymer-element name="star-ratings" attributes="count value autofocus">
+<dom-module id="star-ratings">
+  <style>
+    :host {
+      display: inline-block;
+      white-space: nowrap;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+    }
+
+    #star {
+      display: inline-block;
+      vertical-align: middle;
+      width: 24px;
+      height: 24px;
+      margin: 0 5px;
+      background-size: 100% 100%;
+      cursor: pointer;
+      color: var(--star-color, #333);
+    }
+
+  </style>
   <template>
-    <link rel="stylesheet" href="star-ratings.css">
-    <core-a11y-keys id="a11y" keys="* end home right up left down esc" target="{{$.container}}" on-keys-pressed="{{handleKeys}}"></core-a11y-keys>
-    <span id="container" tabindex="0" on-keydown="{{keydownAction}}" role="slider" aria-valuemax="{{count}}" aria-valuemin="0" aria-valuenow="{{value}}">
-      <template repeat="{{star in stars}}">
-        <core-icon id="star" icon="{{ star < value? 'star' : 'star-outline' }}"  on-tap="{{updateValue}}"></core-icon>
+    <iron-a11y-keys id="a11y" keys="* end home right up left down esc" on-keys-pressed="handleKeys"></iron-a11y-keys>
+    <span id="container" tabindex="0" role="slider" aria-valuemax="{{count}}" aria-valuemin="0" aria-valuenow="{{value}}">
+      <template is="dom-repeat" items="{{stars}}" as="star">
+        <iron-icon id="star" icon="{{starIcon(star, value)}}"  on-tap="updateValue"></iron-icon>
       </template>
     </span>
   </template>
   <script>
-    Polymer('star-ratings', {
-      /**
-       * Whether to focus this element on document load.
-       * 
-       * @attribute autofocus
-       * @type boolean
-       * @default false
-       */
-      autofocus: false,
-      /**
-       * Number of stars to display.
-       *
-       * @attribute count
-       * @type number
-       * @default 5
-       */
-      count: 5,
-      /**
-       * Number of selected stars.
-       *
-       * @attribute value
-       * @type number
-       * @default 0
-       */
-      value: 0,
-      ready: function() {
-        this.countChanged();
-        if (this.autofocus) {
-          this.$.container.focus();
+    Polymer({
+      is: 'star-ratings',
+
+      properties: {
+        /**
+         * Whether to focus this element on document load.
+         *
+         * @attribute autofocus
+         * @type Boolean
+         * @value false
+         */
+        autofocus: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * Number of stars to display.
+         *
+         * @attribute count
+         * @type Number
+         * @value 5
+         */
+        count: {
+          type: Number,
+          value: 5
+        },
+        /**
+         * Computed array of stars.
+         *
+         * @attribute stars
+         * @type Array
+         */
+        stars: {
+          type: Array,
+          computed: 'starsArray(count)'
+        },
+        /**
+         * Number of selected stars.
+         *
+         * @attribute value
+         * @type Number
+         * @value 0
+         */
+        value: {
+          type: Number,
+          value: 0,
+          observer: 'valueChanged'
         }
       },
-      countChanged: function() {
-        this.stars = [];
-        for (var i = 0; i < this.count; i++) {
-          this.stars.push(i);
+      ready: function() {
+        if (this.autofocus) {
+          this.$.container.focus();
         }
       },
       valueChanged: function() {
@@ -96,8 +132,8 @@ Fired when the count of selected stars changes.
              this.value + (this.value == 1 ? ' star' : ' stars'));
         this.fire('star-count-changed', { value: this.value });
       },
-      updateValue: function(event, detail, sender) {
-        var s = sender.templateInstance.model.star;
+      updateValue: function(event, detail) {
+        var s = event.model.index;
         this.value = s + Number(s >= this.value);
       },
       incrementValue: function() {
@@ -147,7 +183,17 @@ Fired when the count of selected stars changes.
             return;
           }
         }
+      },
+      starIcon: function(star, value) {
+        return star < value ? 'star' : 'star-border';
+      },
+      starsArray: function(count) {
+        var stars = [];
+        for (var i = 0; i < this.count; i++) {
+          stars.push(i);
+        }
+        return stars;
       }
     });
   </script>
-</polymer-element>
+</dom-module>
