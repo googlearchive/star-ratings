@@ -113,11 +113,13 @@ Fired when the count of selected stars changes.
          *
          * @attribute value
          * @type Number
+         * @notify true
          * @value 0
          */
         value: {
           type: Number,
           value: 0,
+          notify: true,
           observer: 'valueChanged'
         }
       },
